@@ -296,10 +296,12 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         }
         catch (Exception e)
         {
-            Toast.makeText(getApplicationContext(), "error :" + e.getMessage(),Toast.LENGTH_LONG).show();
-
+            Toast.makeText(this, "Désolé cet aliment n'est pas encore enregistré dans la base de données.", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(Main2Activity.this,MainActivity.class);
+            startActivity(intent);
         }}
     private void LoadDatabse()
+
     {
         File checkDB = null;
         try {

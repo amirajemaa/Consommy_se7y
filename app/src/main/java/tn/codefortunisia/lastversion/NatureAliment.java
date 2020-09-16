@@ -51,6 +51,7 @@ public class NatureAliment {
         this.soduim = round(Double.parseDouble(soduim));
         this.fibre = Double.parseDouble(df.format(Double.parseDouble(fibre)));
         this.protein = Double.parseDouble(df.format(Double.parseDouble(protein)));
+        this.quantité=Double.parseDouble(df.format(Double.parseDouble(quantité)));
         this.ingrédients = ingrédients;
         this.catégorie = catégorie;
         fruit = 0;

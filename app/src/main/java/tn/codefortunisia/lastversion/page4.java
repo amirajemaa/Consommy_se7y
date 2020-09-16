@@ -91,7 +91,7 @@ public class page4 extends AppCompatActivity implements View.OnClickListener{
             String dbURL = "jdbc:sqldroid:" + getFilesDir() + "/" + dbName;
             Connection connection = DriverManager.getConnection(dbURL);
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("Select * from aliments");
+            ResultSet rs = stmt.executeQuery("Select * from aliments Order by nom");
             while (rs.next()) {
                 nom = rs.getString("nom");
                 CheckBox ch1;

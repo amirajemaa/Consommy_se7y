@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Html;
@@ -21,6 +22,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class page3 extends AppCompatActivity implements  View.OnClickListener {
@@ -28,6 +30,7 @@ public class page3 extends AppCompatActivity implements  View.OnClickListener {
     private HashMap additif;
     ConstraintLayout r;
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,29 +89,36 @@ public class page3 extends AppCompatActivity implements  View.OnClickListener {
                 }
 
             }}
-        String ch1 = "";
-        if (allerg_proposé.size()!=0 ) {
-
-            for (int i = 0; i < allerg_proposé.size(); i++)
-                ch1 += "*" + allerg_proposé.get(i) + "\n";
-        }
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if ((ch.length()!=0)&&(allerg_proposé.size()==0 ))
             builder.setMessage("Attention ! ce produit contient :\n \n"+ch);
-        else if (allerg_proposé.size()!=0 ) {
+
+        else if ((allerg_proposé.size()!=0)&&(ch.length()!=0) ) {
             String ch2 ="";
             for (int i = 0; i < allerg_proposé.size(); i++)
-                ch2+= "*" + allerg_proposé.get(i) + "\n";
-            if (ch.length()!=0) {
+            {
+                if(Arrays.stream(tab_allerg).noneMatch(allerg_proposé.get(i)::equals))
+                {
+                    ch2 += "*" + allerg_proposé.get(i) + "\n";
+                }
+            }
+            if ((ch.length()!=0) && (ch2.length()!=0) )
+            {
                 {
                     builder.setMessage("Attention ! ce produit contient :\n \n" + ch + "\n " + "En outre, en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n"+ ch2+ "qui peut nuire à votre santé");
                 }
-            } else if (ch.length() == 0)
+            }
+            else if ((ch.length() == 0) && (ch2.length() !=0))
                 builder.setMessage("\n" +
                         "en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n" + ch2 + "qui peut nuire à votre santé");
+              else if ((ch.length()!=0)&&(ch2.length()==0))
+            {
+                builder.setMessage("Attention ! ce produit contient :\n \n" +ch);
+            }
         }
+
         else
             builder.setMessage("\n" +"Ce produit ne contient aucun élément auquel vous êtes allergique");
 

@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                       scanCode();
+                        scanCode();
                         Intent intent =  new Intent(MainActivity.this, Main2Activity.class);
                         intent.putExtra("result", result.getContents());
                         startActivity(intent);
