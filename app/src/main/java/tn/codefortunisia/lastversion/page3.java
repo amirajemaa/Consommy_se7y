@@ -58,23 +58,23 @@ public class page3 extends AppCompatActivity implements  View.OnClickListener {
                 getIntent().getStringExtra("fibres"), getIntent().getStringExtra("quantite"),
                 getIntent().getStringExtra("composants"), getIntent().getStringExtra("catégorie"));
         if (getIntent().getStringExtra("catégorie") == "jus" || getIntent().getStringExtra("catégorie") == "Boissons gazeuses") {
-            if (aliment.calcul_score() < -1) {
+            if (aliment.calculScore() < -1) {
                 r.setBackgroundResource(R.drawable.pageb);
-            } else if (aliment.calcul_score() <= 5 && aliment.calcul_score() >= 2) {
+            } else if (aliment.calculScore() <= 5 && aliment.calculScore() >= 2) {
                 r.setBackgroundResource(R.drawable.pagec);
-            } else if (aliment.calcul_score() <= 9) {
+            } else if (aliment.calculScore() <= 9) {
                 r.setBackgroundResource(R.drawable.paged);
             } else {
                 r.setBackgroundResource(R.drawable.pagee);
             }
         } else {
-            if (aliment.calcul_score() < -1) {
+            if (aliment.calculScore() < -1) {
                 r.setBackgroundResource(R.drawable.pagea);
-            } else if (aliment.calcul_score() <= 2) {
+            } else if (aliment.calculScore() <= 2) {
                 r.setBackgroundResource(R.drawable.pageb);
-            } else if (aliment.calcul_score() <= 10) {
+            } else if (aliment.calculScore() <= 10) {
                 r.setBackgroundResource(R.drawable.pagec);
-            } else if (aliment.calcul_score() <= 18) {
+            } else if (aliment.calculScore() <= 18) {
                 r.setBackgroundResource(R.drawable.paged);
             } else {
                 r.setBackgroundResource(R.drawable.pagee);
@@ -82,38 +82,38 @@ public class page3 extends AppCompatActivity implements  View.OnClickListener {
         }
         ArrayList<String> allerg = (ArrayList<String>) getIntent().getSerializableExtra("allergenes");
         String ch= "";
-        String tab_allerg[] = new String[20];
-        tab_allerg = getIntent().getStringExtra("composants").split(",");
+        String taballerg[] = new String[20];
+        taballerg = getIntent().getStringExtra("composants").split(",");
         if (allerg.size()!=0)
-                {for (int i = 0; i < tab_allerg.length; i++) {
+                {for (int i = 0; i < taballerg.length; i++) {
                     for (int j = 0; j < allerg.size(); j++) {
-                         if ((tab_allerg[i]).equals(allerg.get(j)))
-                        ch += "*"+tab_allerg[i]+"\n";
+                         if ((taballerg[i]).equals(allerg.get(j)))
+                        ch += "*"+taballerg[i]+"\n";
                 }
 
             }}
         String ch1 = "";
         if (allergpropose.size()!=0 ) {
 
-            for (int i = 0; i < allergpropose.size(); i++)
-                ch1 += "*" + allergpropose.get(i) + "\n";
+            for (int i = 0; i < allergpropose.size(); i++) {
+                if(!(allerg.contains(allergpropose.get(i)))){
+                    Toast.makeText(this, "no results" + allerg.contains(allergpropose.get(i)) , Toast.LENGTH_LONG).show();
+                ch1 += "*" + allergpropose.get(i) + "\n";}
+            }
         }
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if ((ch.length()!=0)&&(allergpropose.size()==0 ))
+        if ((ch.length()!=0)&&(ch1.length()==0))
             builder.setMessage("Attention ! ce produit contient :\n \n"+ch);
-        else if (allergpropose.size()!=0 ) {
-            String ch2 ="";
-            for (int i = 0; i < allergpropose.size(); i++)
-                ch2+= "*" + allergpropose.get(i) + "\n";
+        else if (ch1.length()!=0 ) {
             if (ch.length()!=0) {
                 {
-                    builder.setMessage("Attention ! ce produit contient :\n \n" + ch + "\n " + "En outre, en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n"+ ch2+ "qui peut nuire à votre santé");
+                    builder.setMessage("Attention ! ce produit contient :\n \n" + ch + "\n " + "En outre, en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n"+ ch1+ "qui peut nuire à votre santé");
                 }
             } else if (ch.length() == 0)
                 builder.setMessage("\n" +
-                        "en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n" + ch2 + "qui peut nuire à votre santé");
+                        "en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n" + ch1 + "qui peut nuire à votre santé");
         }
         else
             builder.setMessage("\n" +"Ce produit ne contient aucun élément auquel vous êtes allergique");
@@ -163,30 +163,30 @@ public class page3 extends AppCompatActivity implements  View.OnClickListener {
             case R.id.additifs:
             {
 
-                String tab_additifs[] = new String[20];
-                tab_additifs = getIntent().getStringExtra("additifs").split(",");
+                String tabadditifs[] = new String[20];
+                tabadditifs = getIntent().getStringExtra("additifs").split(",");
                 String ch1= "";
                 String ch2= "";
                 String ch3= "";
                 String ch4= "";
-                for (int i = 0; i < tab_additifs.length; i++) {
-                    if(additif.get(tab_additifs[i]) == "Acceptable")
-                        ch1= tab_additifs[i] + " \n" + ch1 ;
+                for (int i = 0; i < tabadditifs.length; i++) {
+                    if(additif.get(tabadditifs[i]) == "Acceptable")
+                        ch1= tabadditifs[i] + " \n" + ch1 ;
                 }
                 if (!ch1.isEmpty()) {ch1 += " : Acceptable" ; }
-                for (int i = 0; i < tab_additifs.length; i++) {
-                    if(additif.get(tab_additifs[i]) == "Tolérable, vigilance pour certaines populations")
-                        ch2= tab_additifs[i] + " \n" + ch2   ;
+                for (int i = 0; i < tabadditifs.length; i++) {
+                    if(additif.get(tabadditifs[i]) == "Tolérable, vigilance pour certaines populations")
+                        ch2= tabadditifs[i] + " \n" + ch2   ;
                 }
                 if (!ch2.isEmpty()) {ch2 += " : Tolérable, vigilance pour certaines populations" ; }
-                for (int i = 0; i < tab_additifs.length; i++) {
-                    if(additif.get(tab_additifs[i]) == "Peu recommandable")
-                        ch3= tab_additifs[i] + " \n " + ch3  ;
+                for (int i = 0; i < tabadditifs.length; i++) {
+                    if(additif.get(tabadditifs[i]) == "Peu recommandable")
+                        ch3= tabadditifs[i] + " \n " + ch3  ;
                 }
                 if (!ch3.isEmpty()) {ch3 += " :Peu recommandable" ; }
-                for (int i = 0; i < tab_additifs.length; i++) {
-                    if(additif.get(tab_additifs[i]) == "à eviter")
-                        ch4= tab_additifs[i] + " \n " + ch4 ;
+                for (int i = 0; i < tabadditifs.length; i++) {
+                    if(additif.get(tabadditifs[i]) == "à eviter")
+                        ch4= tabadditifs[i] + " \n " + ch4 ;
                 }
                 if (!ch4.isEmpty()) {ch4 += " : à eviter" ; }
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
