@@ -4,7 +4,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Html;
@@ -22,7 +21,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class page3 extends AppCompatActivity implements  View.OnClickListener {
@@ -30,17 +28,16 @@ public class page3 extends AppCompatActivity implements  View.OnClickListener {
     private HashMap additif;
     ConstraintLayout r;
 
-    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_page3);
         energie = findViewById(R.id.energie);
-        energie.setText(String.format("   %s \n kj/100g", getIntent().getStringExtra("energie")));
+        energie.setText("   " + getIntent().getStringExtra("energie") + " \n kj/100g");
         sodium = findViewById(R.id.sodium);
-        sodium.setText(String.format("        %s \n mg/100g", getIntent().getStringExtra("sodium")));
+        sodium.setText("        " + getIntent().getStringExtra("sodium") + " \n mg/100g");
         sucres = findViewById(R.id.sucres);
-        sucres.setText(String.format("   %s \n g/100g", getIntent().getStringExtra("sucre")));
+        sucres.setText("   " + getIntent().getStringExtra("sucre") + " \n g/100g");
         acides = findViewById(R.id.acides);
         acides.setText("   " + getIntent().getStringExtra("acide") + " \n g/100g");
         nom = findViewById(R.id.nom);
@@ -82,43 +79,32 @@ public class page3 extends AppCompatActivity implements  View.OnClickListener {
         String tab_allerg[] = new String[20];
         tab_allerg = getIntent().getStringExtra("composants").split(",");
         if (allerg.size()!=0)
-                {for (int i = 0; i < tab_allerg.length; i++) {
-                    for (int j = 0; j < allerg.size(); j++) {
-                         if ((tab_allerg[i]).equals(allerg.get(j)))
-                        ch += "*"+tab_allerg[i]+"\n";
-                }
+        {for (int i = 0; i < tab_allerg.length; i++) {
+            for (int j = 0; j < allerg.size(); j++) {
+                if ((tab_allerg[i]).equals(allerg.get(j)))
+                    ch += "*"+tab_allerg[i]+"\n";
+            }
 
-            }}
+        }}
+
+
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if ((ch.length()!=0)&&(allerg_proposé.size()==0 ))
             builder.setMessage("Attention ! ce produit contient :\n \n"+ch);
-
-        else if ((allerg_proposé.size()!=0)&&(ch.length()!=0) ) {
-            String ch2 ="";
+        else if (allerg_proposé.size()!=0 ) {
+            String ch1 = "";
             for (int i = 0; i < allerg_proposé.size(); i++)
-            {
-                if(Arrays.stream(tab_allerg).noneMatch(allerg_proposé.get(i)::equals))
+                ch1 += "*" + allerg_proposé.get(i) + "\n";
+            if (ch.length()!=0) {
                 {
-                    ch2 += "*" + allerg_proposé.get(i) + "\n";
+                    builder.setMessage("Attention ! ce produit contient :\n \n" + ch + "\n " + "En outre, en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n"+ ch1 + "qui peut nuire à votre santé");
                 }
-            }
-            if ((ch.length()!=0) && (ch2.length()!=0) )
-            {
-                {
-                    builder.setMessage("Attention ! ce produit contient :\n \n" + ch + "\n " + "En outre, en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n"+ ch2+ "qui peut nuire à votre santé");
-                }
-            }
-            else if ((ch.length() == 0) && (ch2.length() !=0))
+            } else if (ch.length() == 0)
                 builder.setMessage("\n" +
-                        "en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n" + ch2 + "qui peut nuire à votre santé");
-              else if ((ch.length()!=0)&&(ch2.length()==0))
-            {
-                builder.setMessage("Attention ! ce produit contient :\n \n" +ch);
-            }
+                        "en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n" + ch1 + "qui peut nuire à votre santé");
         }
-
         else
             builder.setMessage("\n" +"Ce produit ne contient aucun élément auquel vous êtes allergique");
 
@@ -218,4 +204,3 @@ public class page3 extends AppCompatActivity implements  View.OnClickListener {
 
 
 }
-

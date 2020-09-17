@@ -27,7 +27,6 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     final String dbName = "alimentt.db";
     String energie,sodium,acide,sucre,nom,composants,additifs,catégorie,fibres,proteins,quantite;
     ArrayList<String> arrayList = new ArrayList<String>();
-    ArrayList<String> allerg_proposé = new ArrayList<>() ;
 
 
     @Override
@@ -217,6 +216,8 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             case R.id.valider:
             {
                 Intent intent = new Intent(Main2Activity.this,page3.class);
+                ArrayList<String> allerg_proposé = new ArrayList<>();
+                intent.putExtra("allerg_proposé",allerg_proposé);
                 intent.putExtra("allergenes",arrayList);
                 intent.putExtra("result",getIntent().getStringExtra("result"));
                 intent.putExtra("energie",energie);
@@ -230,7 +231,6 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                 intent.putExtra("additifs",additifs);
                 intent.putExtra("composants",composants);
                 intent.putExtra("quantite",quantite);
-                intent.putExtra("allerg_proposé",allerg_proposé);
                 startActivity(intent);
                 break;
             }
@@ -296,12 +296,10 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         }
         catch (Exception e)
         {
-            Toast.makeText(this, "Désolé cet aliment n'est pas encore enregistré dans la base de données.", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(Main2Activity.this,MainActivity.class);
-            startActivity(intent);
+            Toast.makeText(getApplicationContext(), "error :" + e.getMessage(),Toast.LENGTH_LONG).show();
+
         }}
     private void LoadDatabse()
-
     {
         File checkDB = null;
         try {
