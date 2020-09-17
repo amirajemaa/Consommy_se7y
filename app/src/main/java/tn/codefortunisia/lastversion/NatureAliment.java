@@ -1,21 +1,23 @@
 package tn.codefortunisia.lastversion;
 
+import android.widget.Toast;
+
 import java.util.Arrays;
 import java.text.DecimalFormat;
 import static java.lang.Math.round;
 
 
 public class NatureAliment {
-    double energy;
-    double sugar;
-    double acide;
-    double soduim;
-    double fruit;
-    double dried_fruit;
-    double non_fruit;
-    double protein;
-    double fibre;
-    double quantité;
+     double energy;
+     double sugar;
+     double acide;
+     double soduim;
+     double fruit;
+     double driedfruit;
+     double nonfruit;
+     double protein;
+     double fibre;
+     double quantité;
     String ingrédients;
     String catégorie;
 
@@ -27,9 +29,9 @@ public class NatureAliment {
             "arachide", "châtaignes",
             "Colza", "huile d'olive", "poudre de cacao"
     };
-    String fruit_sec[] = {"amande", "cacahuète", "raisin sec", "châtaigne", "noisette", "noisette chilienne", "noix", "noix de cajou", "noix de coco", "noix de macadamia", "noix de pécan", "noix du Brésil", "pignon de pin", "pistache", "abricot", "datte seche", "figue", "pruneau"};
+    String fruitsec[] = {"amande", "cacahuète", "raisin sec", "châtaigne", "noisette", "noisette chilienne", "noix", "noix de cajou", "noix de coco", "noix de macadamia", "noix de pécan", "noix du Brésil", "pignon de pin", "pistache", "abricot", "datte seche", "figue", "pruneau"};
 
-    NatureAliment(double energy, double sugar, double acide, double soduim, double protein, double fibre, double quantité, String ingrédients) {
+    NatureAliment(double energy, double sugar, double acide, double soduim, double protein, double fibre, double quantité, String ingrédients,String catégorie) {
         this.energy = energy;
         this.sugar = sugar;
         this.acide = acide;
@@ -38,28 +40,30 @@ public class NatureAliment {
         this.protein = protein;
         this.quantité = quantité;
         this.ingrédients = ingrédients;
+        this.catégorie = catégorie ;
         fruit = 0;
-        dried_fruit = 0;
-        non_fruit = 0;
+        driedfruit = 0;
+        nonfruit = 0;
     }
 
     public NatureAliment(String energy, String sugar, String acide, String soduim, String protein, String fibre, String quantité, String ingrédients ,String catégorie) {
         DecimalFormat df = new DecimalFormat("#####.0");
         this.energy = round(Double.parseDouble(energy));
-        this.sugar = Double.parseDouble(df.format(Double.parseDouble(sugar)));
+        this.sugar = round(Double.parseDouble(sugar)*10)/10;
         this.acide = round(Double.parseDouble(acide));
         this.soduim = round(Double.parseDouble(soduim));
-        this.fibre = Double.parseDouble(df.format(Double.parseDouble(fibre)));
-        this.protein = Double.parseDouble(df.format(Double.parseDouble(protein)));
-        this.quantité=Double.parseDouble(df.format(Double.parseDouble(quantité)));
+        this.fibre = round(Double.parseDouble(fibre)*10)/10;
+        this.protein = round(Double.parseDouble(protein)*10)/10;
         this.ingrédients = ingrédients;
         this.catégorie = catégorie;
+        this.quantité= Double.parseDouble(quantité);
         fruit = 0;
-        dried_fruit = 0;
-        non_fruit = 0;
+        driedfruit = 0;
+        nonfruit = 0;
     }
+    public NatureAliment(){}
 
-    int calcul_energy() {
+    int calculEnergy() {
         if (energy <= 335) {
             return 0;
         } else if (energy <= 670) {
@@ -84,7 +88,7 @@ public class NatureAliment {
 
     }
 
-    int calcul_sugar() {
+    int calculSugar() {
         if (sugar <= 4.5) {
             return 0;
         } else if (sugar <= 9) {
@@ -109,7 +113,7 @@ public class NatureAliment {
 
     }
 
-    int calcul_acide() {
+    int calculAcide() {
         if (acide <= 1) {
             return 0;
         } else if (acide <= 2) {
@@ -134,7 +138,7 @@ public class NatureAliment {
 
     }
 
-    int calcul_soduim() {
+    int calculSoduim() {
         if (soduim <= 90) {
             return 0;
         } else if (soduim <= 180) {
@@ -159,7 +163,7 @@ public class NatureAliment {
 
     }
 
-    int calcul_fibre() {
+    int calculFibre() {
         if (fibre <= 0.9) {
             return 0;
         } else if (fibre <= 1.9) {
@@ -174,7 +178,7 @@ public class NatureAliment {
 
     }
 
-    int calcul_protein() {
+    int calculProtein() {
         if (protein <= 1.6) {
             return 0;
         } else if (protein <= 3.2) {
@@ -189,7 +193,7 @@ public class NatureAliment {
 
     }
 
-    int calcul_fruit() {
+    int calculFruit() {
         String tab_ingradiant[] = new String[100];
         tab_ingradiant = ingrédients.split(",");
         for (int i = 0; i < tab_ingradiant.length; i++) {
@@ -198,15 +202,15 @@ public class NatureAliment {
                 composant = tab_ingradiant[i].split("/");
                 if (Arrays.asList(fruits).contains(composant[0])) {
                     fruit += Double.parseDouble(composant[1]) * quantité / 100;
-                } else if (Arrays.asList(fruit_sec).contains(composant[0])) {
-                    dried_fruit += Double.parseDouble(composant[1]) * quantité / 100;
+                } else if (Arrays.asList(fruitsec).contains(composant[0])) {
+                    driedfruit += Double.parseDouble(composant[1]) * quantité / 100;
                 }
 
             }
         }
-        non_fruit = quantité - round(fruit) - round(dried_fruit);
+        nonfruit = quantité - round(fruit) - round(driedfruit);
         System.out.println(fruit);
-        double x = 100 * (fruit + 2 * dried_fruit) / (fruit + 2 * dried_fruit + non_fruit);
+        double x = 100 * (fruit + 2 * driedfruit) / (fruit + 2 * driedfruit + nonfruit);
 
         if (x <= 40) {
             return 0;
@@ -219,17 +223,16 @@ public class NatureAliment {
     }
 
     int calcul_score() {
-        int n = calcul_energy() + calcul_sugar() + calcul_acide() + calcul_soduim();
-        int p = calcul_fruit() + calcul_fibre() + calcul_protein();
+        int n = calculEnergy() + calculSugar() + calculAcide() + calculSoduim();
+        int p = calculFruit() + calculFibre() + calculProtein();
         if (n < 11) {
             return n - p;
         } else {
-            if (calcul_fruit() == 5) {
+            if (calculFruit() == 5) {
                 return n - p;
             } else {
-                return n - p + calcul_protein();
+                return n - p + calculProtein();
             }
         }
     }
 }
-

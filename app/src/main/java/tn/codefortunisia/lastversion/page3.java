@@ -20,12 +20,17 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static java.lang.Math.round;
 
 public class page3 extends AppCompatActivity implements  View.OnClickListener {
     private TextView energie, sodium, sucres, nom, acides, additifs, allergenes, what;
     private HashMap additif;
+    NatureAliment aliment;
+
     ConstraintLayout r;
 
     @Override
@@ -33,22 +38,23 @@ public class page3 extends AppCompatActivity implements  View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_page3);
         energie = findViewById(R.id.energie);
-        energie.setText("   " + getIntent().getStringExtra("energie") + " \n kj/100g");
+        energie.setText(String.format("   %s \n kj/100g", getIntent().getStringExtra("energie")));
         sodium = findViewById(R.id.sodium);
-        sodium.setText("        " + getIntent().getStringExtra("sodium") + " \n mg/100g");
+        sodium.setText(String.format("        %s \n mg/100g", getIntent().getStringExtra("sodium")));
         sucres = findViewById(R.id.sucres);
-        sucres.setText("   " + getIntent().getStringExtra("sucre") + " \n g/100g");
+        sucres.setText(String.format("   %s \n g/100g", getIntent().getStringExtra("sucre")));
         acides = findViewById(R.id.acides);
         acides.setText("   " + getIntent().getStringExtra("acide") + " \n g/100g");
         nom = findViewById(R.id.nom);
         nom.setText(getIntent().getStringExtra("nom"));
-        ArrayList<String> allerg_proposé = (ArrayList<String>) getIntent().getSerializableExtra("allerg_proposé");
+        ArrayList<String> allergpropose = (ArrayList<String>) getIntent().getSerializableExtra("allerg_proposé");
         r = findViewById(R.id.page3);
         additifs=findViewById(R.id.additifs);
         additifs.setOnClickListener(this);
-        NatureAliment aliment = new NatureAliment(getIntent().getStringExtra("energie"),
+
+       aliment = new NatureAliment(getIntent().getStringExtra("energie"),
                 getIntent().getStringExtra("sucre"), getIntent().getStringExtra("acide"),
-                getIntent().getStringExtra("sodium"), getIntent().getStringExtra("proteins"),
+               "0.0", getIntent().getStringExtra("proteins"),
                 getIntent().getStringExtra("fibres"), getIntent().getStringExtra("quantite"),
                 getIntent().getStringExtra("composants"), getIntent().getStringExtra("catégorie"));
         if (getIntent().getStringExtra("catégorie") == "jus" || getIntent().getStringExtra("catégorie") == "Boissons gazeuses") {
@@ -79,31 +85,35 @@ public class page3 extends AppCompatActivity implements  View.OnClickListener {
         String tab_allerg[] = new String[20];
         tab_allerg = getIntent().getStringExtra("composants").split(",");
         if (allerg.size()!=0)
-        {for (int i = 0; i < tab_allerg.length; i++) {
-            for (int j = 0; j < allerg.size(); j++) {
-                if ((tab_allerg[i]).equals(allerg.get(j)))
-                    ch += "*"+tab_allerg[i]+"\n";
-            }
+                {for (int i = 0; i < tab_allerg.length; i++) {
+                    for (int j = 0; j < allerg.size(); j++) {
+                         if ((tab_allerg[i]).equals(allerg.get(j)))
+                        ch += "*"+tab_allerg[i]+"\n";
+                }
 
-        }}
+            }}
+        String ch1 = "";
+        if (allergpropose.size()!=0 ) {
 
-
+            for (int i = 0; i < allergpropose.size(); i++)
+                ch1 += "*" + allergpropose.get(i) + "\n";
+        }
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if ((ch.length()!=0)&&(allerg_proposé.size()==0 ))
+        if ((ch.length()!=0)&&(allergpropose.size()==0 ))
             builder.setMessage("Attention ! ce produit contient :\n \n"+ch);
-        else if (allerg_proposé.size()!=0 ) {
-            String ch1 = "";
-            for (int i = 0; i < allerg_proposé.size(); i++)
-                ch1 += "*" + allerg_proposé.get(i) + "\n";
+        else if (allergpropose.size()!=0 ) {
+            String ch2 ="";
+            for (int i = 0; i < allergpropose.size(); i++)
+                ch2+= "*" + allergpropose.get(i) + "\n";
             if (ch.length()!=0) {
                 {
-                    builder.setMessage("Attention ! ce produit contient :\n \n" + ch + "\n " + "En outre, en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n"+ ch1 + "qui peut nuire à votre santé");
+                    builder.setMessage("Attention ! ce produit contient :\n \n" + ch + "\n " + "En outre, en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n"+ ch2+ "qui peut nuire à votre santé");
                 }
             } else if (ch.length() == 0)
                 builder.setMessage("\n" +
-                        "en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n" + ch1 + "qui peut nuire à votre santé");
+                        "en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n" + ch2 + "qui peut nuire à votre santé");
         }
         else
             builder.setMessage("\n" +"Ce produit ne contient aucun élément auquel vous êtes allergique");
@@ -193,14 +203,15 @@ public class page3 extends AppCompatActivity implements  View.OnClickListener {
             }
 
         }
-
-
-
-
+//
+//
+//
+//
+//
+//
+//    }
 
 
     }
-
-
-
 }
+
