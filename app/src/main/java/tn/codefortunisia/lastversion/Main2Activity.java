@@ -64,7 +64,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
 
-        // Intent intent = new Intent(Main2Activity.this,page3.class);
+        // Intent intent = new Intent(Main2Activity.this,page4.class);
         switch (v.getId()) {
 
             case R.id.gluten: {
@@ -215,7 +215,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             }
             case R.id.valider:
             {
-                Intent intent = new Intent(Main2Activity.this,page3.class);
+                Intent intent = new Intent(Main2Activity.this, page4.class);
                 ArrayList<String> allerg_proposé = new ArrayList<>();
                 intent.putExtra("allerg_proposé",allerg_proposé);
                 intent.putExtra("allergenes",arrayList);
@@ -241,7 +241,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                 builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(Main2Activity.this,page4.class);
+                        Intent intent = new Intent(Main2Activity.this, page3.class);
                         intent.putExtra("allergenes",arrayList);
                         intent.putExtra("composants",composants);
                         intent.putExtra("energie",energie);

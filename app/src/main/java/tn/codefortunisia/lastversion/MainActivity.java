@@ -80,9 +80,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            scanCode();
+
                             onStop();
-                            
+
                         }
                     });
                     AlertDialog dialog = builder.create();
@@ -132,6 +132,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Connection connection = DriverManager.getConnection(dbURL);
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("Select * from aliments WHERE  code ="+bar);
+            while(rs.next())
+            {
+                return true;
+            }
             connection.close();
         }
         catch (Exception e)
@@ -139,6 +143,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return false;
 
         }
-        return true;
+        return false;
     }
 }
