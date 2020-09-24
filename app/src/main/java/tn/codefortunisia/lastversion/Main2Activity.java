@@ -215,25 +215,81 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             }
             case R.id.valider:
             {
-                Intent intent = new Intent(Main2Activity.this, page4.class);
-                ArrayList<String> allerg_proposé = new ArrayList<>();
-                intent.putExtra("allerg_proposé",allerg_proposé);
-                intent.putExtra("allergenes",arrayList);
-                intent.putExtra("result",getIntent().getStringExtra("result"));
-                intent.putExtra("energie",energie);
-                intent.putExtra("sucre",sucre);
-                intent.putExtra("sodium",sodium);
-                intent.putExtra("acide",acide);
-                intent.putExtra("fibres",fibres);
-                intent.putExtra("proteins",proteins);
-                intent.putExtra("nom",nom);
-                intent.putExtra("catégorie",catégorie);
-                intent.putExtra("additifs",additifs);
-                intent.putExtra("composants",composants);
-                intent.putExtra("quantite",quantite);
-                startActivity(intent);
+                String taballerg[] = new String[20];
+                taballerg = composants.split(",");
+                String ch= "";
+                assert arrayList != null;
+                if (arrayList.size()!=0)
+                {
+                    for (int i = 0; i < taballerg.length; i++) {
+                        if ((arrayList).contains(taballerg[i])){
+                            ch += "*"+taballerg[i]+"\n";
+                        }
+
+                    }
+                }
+
+
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                if ((ch.length()!=0)) {
+                    builder.setMessage("Attention ! ce produit contient :\n \n" + ch + "\n voulez vous voir le nutri-score du produit quand méme ?");
+
+
+                    builder.setTitle("Allergènes : ");
+                    builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(Main2Activity.this, page4.class);
+                            intent.putExtra("allergenes", arrayList);
+                            intent.putExtra("result", getIntent().getStringExtra("result"));
+                            intent.putExtra("energie", energie);
+                            intent.putExtra("sucre", sucre);
+                            intent.putExtra("sodium", sodium);
+                            intent.putExtra("acide", acide);
+                            intent.putExtra("fibres", fibres);
+                            intent.putExtra("proteins", proteins);
+                            intent.putExtra("nom", nom);
+                            intent.putExtra("catégorie", catégorie);
+                            intent.putExtra("additifs", additifs);
+                            intent.putExtra("composants", composants);
+                            intent.putExtra("quantite", quantite);
+                            startActivity(intent);
+                        }
+                    });
+                    builder.setNegativeButton("non", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(Main2Activity.this, MainActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+                else {
+                    Intent intent = new Intent(Main2Activity.this, page4.class);
+                    intent.putExtra("allergenes", arrayList);
+                    intent.putExtra("result", getIntent().getStringExtra("result"));
+                    intent.putExtra("energie", energie);
+                    intent.putExtra("sucre", sucre);
+                    intent.putExtra("sodium", sodium);
+                    intent.putExtra("acide", acide);
+                    intent.putExtra("fibres", fibres);
+                    intent.putExtra("proteins", proteins);
+                    intent.putExtra("nom", nom);
+                    intent.putExtra("catégorie", catégorie);
+                    intent.putExtra("additifs", additifs);
+                    intent.putExtra("composants", composants);
+                    intent.putExtra("quantite", quantite);
+                    startActivity(intent);
+                }
+
+
                 break;
             }
+
             case R.id.button:{
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("si vous ne connaissez pas les composants qui vous causent des allergies, essayez de choisir les aliments qui n'étaient pas bons pour vous.\n Nous en conclurons les allergènes qui peuvent être nocifs pour votre santé ");

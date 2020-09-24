@@ -1,7 +1,9 @@
 package tn.codefortunisia.lastversion;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -41,7 +43,9 @@ public class page3 extends AppCompatActivity implements View.OnClickListener{
         btn.setOnClickListener(this);
         parent = findViewById(R.id.parent);
         composants = getIntent().getStringExtra("composants");
+        //ouvrir la base de données
         LoadDatabse();
+        //lister toute les élements de la base en checkbox
         TestDatabse();
 
     }
@@ -59,39 +63,95 @@ public class page3 extends AppCompatActivity implements View.OnClickListener{
         catégorie=getIntent().getStringExtra("catégorie");
         additifs=getIntent().getStringExtra("additifs");
         quantite=getIntent().getStringExtra("quantite");
+        // vérifier pour chaque élémnet coché s'il contient des coposants allérgétiques similaire au produit
         for (int i = 0; i < noms.size(); i++) {
             LoadDatabse();
             s = noms.get(i);
             verif();
             verifAllerg();
         }
-        Intent intent = new Intent(page3.this,page4.class);
-        intent.putExtra("allergenes",arrayList);
-        intent.putExtra("composants",composants);
-        intent.putExtra("energie",energie);
-        intent.putExtra("sucre",sucre);
-        intent.putExtra("sodium",sodium);
-        intent.putExtra("acide",acide);
-        intent.putExtra("fibres",fibres);
-        intent.putExtra("proteins",proteins);
-        intent.putExtra("nom",nom);
-        intent.putExtra("catégorie",catégorie);
-        intent.putExtra("additifs",additifs);
-        intent.putExtra("composants",composants);
-        intent.putExtra("quantite",quantite);
-        intent.putExtra("allerg_proposé",allergproposé);
-        startActivity(intent);
+        ArrayList<String> allerg = (ArrayList<String>) getIntent().getSerializableExtra("allergenes");
+        String ch= "";
+        String taballerg[] = new String[20];
+        taballerg = getIntent().getStringExtra("composants").split(",");
+        if (allerg.size()!=0)
+        {for (int i = 0; i < taballerg.length; i++) {
+            for (int j = 0; j < allerg.size(); j++) {
+                if ((taballerg[i]).equals(allerg.get(j)))
+                    ch += "*"+taballerg[i]+"\n";
+            }
+
+        }}
+        String ch1 = "";
+        if (allergproposé.size()!=0 ) {
+
+            for (int i = 0; i < allergproposé.size(); i++) {
+                if(!(allerg.contains(allergproposé.get(i)))){
+                    Toast.makeText(this, "no results" + allerg.contains(allergproposé.get(i)) , Toast.LENGTH_LONG).show();
+                    ch1 += "*" + allergproposé.get(i) + "\n";}
+            }
+        }
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if ((ch.length()!=0)&&(ch1.length()==0))
+            builder.setMessage("Attention ! ce produit contient :\n \n"+ch + "voulez vous voir le nutri-score du produit quand méme ?");
+        else if (ch1.length()!=0 ) {
+            if (ch.length()!=0) {
+                {
+                    builder.setMessage("Attention ! ce produit contient :\n \n" + ch + "\n " + "En outre, en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n"+ ch1+ "qui peut nuire à votre santé" + "\n voulez vous voir le nutri-score du produit quand méme ?");
+                }
+            } else if (ch.length() == 0)
+                builder.setMessage("\n" +
+                        "en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n" + ch1 + "qui peut nuire à votre santé" + "\n voulez vous voir le nutri-score du produit quand méme ?");
+        }
+
+        builder.setTitle("Allergènes : ");
+        builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // passer les valeurs à la page suivante
+                Intent intent = new Intent(page3.this,page4.class);
+                intent.putExtra("allergenes",arrayList);
+                intent.putExtra("composants",composants);
+                intent.putExtra("energie",energie);
+                intent.putExtra("sucre",sucre);
+                intent.putExtra("sodium",sodium);
+                intent.putExtra("acide",acide);
+                intent.putExtra("fibres",fibres);
+                intent.putExtra("proteins",proteins);
+                intent.putExtra("nom",nom);
+                intent.putExtra("catégorie",catégorie);
+                intent.putExtra("additifs",additifs);
+                intent.putExtra("composants",composants);
+                intent.putExtra("quantite",quantite);
+                intent.putExtra("allerg_proposé",allergproposé);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("non", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(page3.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
 
     }
     private void TestDatabse() {
 
 
         try {
+            //connexion a la base et extraire les élements
             DriverManager.registerDriver((Driver) Class.forName("org.sqldroid.SQLDroidDriver").newInstance());
             String dbURL = "jdbc:sqldroid:" + getFilesDir() + "/" + dbName;
             Connection connection = DriverManager.getConnection(dbURL);
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("Select * from aliments order by nom");
+            // construire le checkbox avec le nom de chaque produit
             while (rs.next()) {
                 nom = rs.getString("nom");
                 CheckBox ch1;
@@ -142,13 +202,14 @@ public class page3 extends AppCompatActivity implements View.OnClickListener{
     private void verif() {
         String bar ;
         try {
-
+            //connexion à la base de données
             DriverManager.registerDriver((Driver) Class.forName("org.sqldroid.SQLDroidDriver").newInstance());
             String dbURL = "jdbc:sqldroid:" + getFilesDir() + "/" + dbName;
             Connection connection = DriverManager.getConnection(dbURL);
             Statement stmt = connection.createStatement();
             bar = s;
             ResultSet rs = stmt.executeQuery("Select * from aliments");
+            // extraire les composants de l'élément
             while (rs.next()) {
                 if(rs.getString("nom").equals(bar)) {
                     composantsaliment = rs.getString("composants");
@@ -159,10 +220,11 @@ public class page3 extends AppCompatActivity implements View.OnClickListener{
 
         }
 
-        String tab_composants[] = new String[30];
-        String tab_composants_aliment[] = new String[30];
+        String tab_composants[] = new String[30]; // composants du produit à tester
+        String tab_composants_aliment[] = new String[30]; //composants du produit coché
         tab_composants_aliment = composantsaliment.split(",");
         tab_composants = composants.split(",");
+        // obtenir les composants similare
         for (int i = 0; i < tab_composants_aliment.length; i++) {
             for (int j = 0; j < tab_composants.length; j++) {
                 if ((tab_composants_aliment[i]).equals(tab_composants[j])) {
@@ -175,6 +237,7 @@ public class page3 extends AppCompatActivity implements View.OnClickListener{
         }
     }
     private void verifAllerg(){
+        // verifier pour chaque coposant similaire s'il est allégétique
         for(int i =0 ; i< similarcomposant.size() ; i++){
             if(similarcomposant.get(i).equals("lactose")|| similarcomposant.get(i).equals("lait en poudre") || similarcomposant.get(i).equals("lait") ||similarcomposant.get(i).equals("crème de lait") ||
                     similarcomposant.get(i).equals("protéines laitières") || similarcomposant.get(i).equals("lait frais") || similarcomposant.get(i).equals("lait écrémé en poudre") || similarcomposant.get(i).equals("beurre de lait")
