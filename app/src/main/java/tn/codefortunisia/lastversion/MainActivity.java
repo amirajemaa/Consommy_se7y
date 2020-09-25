@@ -75,14 +75,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 else
                 {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage("Désolé cet aliment n'est pas enregistré dans la base de données");
+                    builder.setMessage("Désolé cet aliment n'est pas enregistré dans la base de données \n voulez vous l'ajouter?");
                     builder.setTitle("scanning Result");
-                    builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
-                            onStop();
+                            Intent intent = new Intent(MainActivity.this,Ajouter_Produit.class);
+                            intent.putExtra("result", result.getContents());
+                            startActivity(intent);
 
+                        }
+                    });
+                    builder.setNegativeButton("Non", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            onStop();
                         }
                     });
                     AlertDialog dialog = builder.create();
