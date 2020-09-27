@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AjouterProduit">
+    tools:context=".AjouterProduit"
+    android:background="@drawable/add">
 
     <EditText
         android:id="@+id/code"
@@ -103,7 +104,7 @@
         android:layout_height="49dp"
         android:layout_marginEnd="10dp"
         android:ems="10"
-        android:hint="sucre eng/100g"
+        android:hint="sucre en g/100g"
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -190,27 +191,27 @@
 
     <Button
         android:id="@+id/annuler"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="annuler"
+        android:layout_width="142dp"
+        android:layout_height="51dp"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.900"
+        app:layout_constraintHorizontal_bias="0.858"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.972" />
+        app:layout_constraintVertical_bias="0.976" />
 
     <Button
         android:id="@+id/ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ok"
+        android:layout_width="133dp"
+        android:layout_height="49dp"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.278"
+        app:layout_constraintHorizontal_bias="0.169"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.972" />
+        app:layout_constraintVertical_bias="0.976" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

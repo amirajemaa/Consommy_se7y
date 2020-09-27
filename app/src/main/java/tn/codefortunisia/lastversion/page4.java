@@ -190,7 +190,11 @@ public class page4 extends AppCompatActivity implements  View.OnClickListener {
                 }
                 if (!ch4.isEmpty()) {ch4 += " : à eviter" ; }
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(Html.fromHtml("<font> les additifs sont :  </font> <br/> <font color= #118d51>"+ch1+"</font> <br/> <font color= #fecb27>"+ch2+" </font> <br/> <font color= #f58024>"+ch3+" </font> <br/> <font color= #ed3b23>"+ch4+" </font>"));
+                if((ch1.isEmpty())&&(ch2.isEmpty())&&(ch3.isEmpty())&&(ch4.isEmpty()))
+                    builder.setMessage("Cet aliment ne contient pas d'additifs");
+                else
+                { builder.setMessage(Html.fromHtml("<font> les additifs sont :  </font> <br/> <font color= #118d51>"+ch1+"</font> <br/> <font color= #fecb27>"+ch2+" </font> <br/> <font color= #f58024>"+ch3+" </font> <br/> <font color= #ed3b23>"+ch4+" </font>"));}
+
                 builder.setTitle("Additifs : ");
                 builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -203,13 +207,7 @@ public class page4 extends AppCompatActivity implements  View.OnClickListener {
             }
 
         }
-//
-//
-//
-//
-//
-//
-//    }
+
 
 
     }

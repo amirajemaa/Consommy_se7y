@@ -23,31 +23,34 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button scanBtn;
-    final String dbName = "alimentt.db";
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        scanBtn = findViewById(R.id.scanBtn);
-        scanBtn.setOnClickListener(this);
+    public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+        Button scanBtn;//un bouton permettant de scanner le code à barres
+        final String dbName = "alimentt.db";//une base de données stockant toutes les informations alimentaires
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+            scanBtn = findViewById(R.id.scanBtn);
+            scanBtn.setOnClickListener(this);
 
-    }
-    @Override
-    public void onClick(View view) {
-        scanCode();
+        }
+        //appuyer sur le bouton scanBtn conduit à commencer à scanner le code
+        @Override
+        public void onClick(View view) {
+            scanCode();
 
-    }
-    private void scanCode() {
-        IntentIntegrator integrator = new IntentIntegrator(this);
-        integrator.setCaptureActivity(Capture.class);
-        integrator.setOrientationLocked(false);
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
-        integrator.setPrompt("Scanning code");
-        integrator.initiateScan();
+        }
 
-    }
+        //scanner le code à barre
+        private void scanCode() {
+            IntentIntegrator integrator = new IntentIntegrator(this);//intégration avec Barcode Scanner via Intent
+            integrator.setCaptureActivity(Capture.class);
+            integrator.setOrientationLocked(false);//ajuster l'orientation du téléphone lors de la capture du code à barres
+            integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);//accepter tous les types du code à barre
+            integrator.setPrompt("Scanning code");
+            integrator.initiateScan();
+
+        }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -104,13 +107,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void LoadDatabse()
     {
-        File checkDB = null;
+        File checkDB = null;//le fichier que nous essaierons d'écrire dans la mémoire interne
         try {
+          //  obtenir un pointeur dans notre base de données
             checkDB = new File(getFilesDir()+"/"+dbName);
             if(!checkDB.exists())
             {
+                //copier dans la base de données existante à partir du dossier assets
                 InputStream myInput = getApplicationContext().getAssets().open(dbName);
+                //le réécrire dans la mémoire interne
                 OutputStream myOutput = new FileOutputStream(getFilesDir()+"/"+dbName);
+                //transférer les bytes du fichier d'entrée vers le fichier de sortie
                 byte[] buffer = new byte[1024];
                 int length;
                 while (( length = myInput.read(buffer))>0)
@@ -131,11 +138,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         try {
+            //charge SQLDRoid JBDC driver
             DriverManager.registerDriver((Driver) Class.forName("org.sqldroid.SQLDroidDriver").newInstance());
+            //établir une connexion à notre base de données dans la mémoire interne
             String dbURL = "jdbc:sqldroid:" + getFilesDir() + "/" +dbName;
             Connection connection = DriverManager.getConnection(dbURL);
+            //préparer la route à partir de la base de données
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("Select * from aliments WHERE  code ="+bar);
+            //boucle à travers l'ensemble de résultats
             while(rs.next())
             {
                 return true;
