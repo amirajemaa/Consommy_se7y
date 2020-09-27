@@ -42,6 +42,7 @@ public class AjouterProduit extends AppCompatActivity implements View.OnClickLis
         ok = findViewById(R.id.ok);
         annuler = findViewById(R.id.annuler);
         ok.setOnClickListener(this);
+        annuler.setOnClickListener(this);
 
     }
 

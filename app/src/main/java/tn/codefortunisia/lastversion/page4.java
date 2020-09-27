@@ -80,53 +80,6 @@ public class page4 extends AppCompatActivity implements  View.OnClickListener {
                 r.setBackgroundResource(R.drawable.ee);
             }
         }
-        ArrayList<String> allerg = (ArrayList<String>) getIntent().getSerializableExtra("allergenes");
-        String ch= "";
-        String taballerg[] = new String[20];
-        taballerg = getIntent().getStringExtra("composants").split(",");
-        if (allerg.size()!=0)
-        {for (int i = 0; i < taballerg.length; i++) {
-            for (int j = 0; j < allerg.size(); j++) {
-                if ((taballerg[i]).equals(allerg.get(j)))
-                    ch += "*"+taballerg[i]+"\n";
-            }
-
-        }}
-        String ch1 = "";
-        if (allergpropose.size()!=0 ) {
-
-            for (int i = 0; i < allergpropose.size(); i++) {
-                if(!(allerg.contains(allergpropose.get(i)))){
-
-                    ch1 += "*" + allergpropose.get(i) + "\n";}
-            }
-        }
-
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if ((ch.length()!=0)&&(ch1.length()==0))
-            builder.setMessage("Attention ! ce produit contient :\n \n"+ch);
-        else if (ch1.length()!=0 ) {
-            if (ch.length()!=0) {
-                {
-                    builder.setMessage("Attention ! ce produit contient :\n \n" + ch + "\n " + "En outre, en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n"+ ch1+ "qui peut nuire à votre santé");
-                }
-            } else if (ch.length() == 0)
-                builder.setMessage("\n" +
-                        "en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n" + ch1 + "qui peut nuire à votre santé");
-        }
-        else
-            builder.setMessage("\n" +"Ce produit ne contient aucun élément auquel vous êtes allergique");
-
-        builder.setTitle("Allergènes : ");
-        builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                onStop();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
         additif = new HashMap<>();
         additif.put("E104","à eviter");
         additif.put("E133","Tolérable, vigilance pour certaines populations ");
@@ -194,7 +147,6 @@ public class page4 extends AppCompatActivity implements  View.OnClickListener {
                     builder.setMessage("Cet aliment ne contient pas d'additifs");
                 else
                 { builder.setMessage(Html.fromHtml("<font> les additifs sont :  </font> <br/> <font color= #118d51>"+ch1+"</font> <br/> <font color= #fecb27>"+ch2+" </font> <br/> <font color= #f58024>"+ch3+" </font> <br/> <font color= #ed3b23>"+ch4+" </font>"));}
-
                 builder.setTitle("Additifs : ");
                 builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -207,7 +159,13 @@ public class page4 extends AppCompatActivity implements  View.OnClickListener {
             }
 
         }
-
+//
+//
+//
+//
+//
+//
+//    }
 
 
     }

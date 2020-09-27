@@ -23,21 +23,23 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class Main2Activity extends AppCompatActivity implements View.OnClickListener{
-    Button gluten,lactose,poisson,oeuf,fruit,arachides,lupin,moutarde,soja,valider,btn;
-    final String dbName = "alimentt.db";
-    String energie,sodium,acide,sucre,nom,composants,additifs,catégorie,fibres,proteins,quantite;
-    ArrayList<String> arrayList = new ArrayList<String>();
+
+    Button gluten,lactose,poisson,oeuf,fruit,arachides,lupin,moutarde,soja,valider,btn; ////la liste des allergènes
+    final String dbName = "alimentt.db";//une base de données stockant toutes les informations alimentaires
+    String energie,sodium,acide,sucre,nom,composants,additifs,catégorie,fibres,proteins,quantite;// les informations nutritionnelles
+    ArrayList<String> arrayList = new ArrayList<String>();//une liste de tous les allergènes sélectionnés y sera enregistrée
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-
+        //charger la base de données
         LoadDatabse();
+        //extraire toutes les informations nutritionnelles du produit scanné
         TestDatabse();
-        gluten = findViewById(R.id.gluten);
-        gluten.setOnClickListener(this);
+        gluten = findViewById(R.id.gluten);//findViewById connecte votre code backend aux éléments de l'interface utilisateur
+        gluten.setOnClickListener(this);//setOnClickListener pour lier listner à certains attributs
         lactose = findViewById(R.id.lactose);
         lactose.setOnClickListener(this);
         oeuf = findViewById(R.id.oeuf);
@@ -63,16 +65,17 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     }
     @Override
     public void onClick(View v) {
-
-        // Intent intent = new Intent(Main2Activity.this,page4.class);
+    //choix des allergènes dont l'utilisateur a une hypersensibilité
         switch (v.getId()) {
 
             case R.id.gluten: {
+                //colorer la case choisie et l'enregistrer dans la liste
                 if (Integer.parseInt(gluten.getTag().toString()) == 0) {
                     arrayList.add("gluten");
                     gluten.setBackgroundColor(Color.parseColor("#1AE37A7A"));
                     gluten.setTag(1);
                 }
+                //décolorer la case si l'utilisateur change son avis et le retirer de la liste
                 else {
                     gluten.setBackgroundColor(Color.TRANSPARENT);
                     gluten.setTag(0);
@@ -83,6 +86,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             case R.id.lactose: {
                 if (Integer.parseInt(lactose.getTag().toString()) == 0) {
                     lactose.setBackgroundColor(Color.parseColor("#1AE37A7A"));
+                    //tous les dérivés du lait
                     arrayList.add("lactose");
                     arrayList.add("lait en poudre");
                     arrayList.add("lait");
@@ -177,12 +181,12 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                 break;}
             case R.id.arachides:{
                 if(Integer.parseInt(arachides.getTag().toString()) == 0) {
-                    arrayList.add("archides");
+                    arrayList.add("arachides");
                     arachides.setBackgroundColor(Color.parseColor("#1AE37A7A"));
                     arachides.setTag(1);
                 }
                 else {
-                    arrayList.remove("archides");
+                    arrayList.remove("arachides");
                     arachides.setBackgroundColor(Color.TRANSPARENT);
                     arachides.setTag(0);
                 }
@@ -213,27 +217,85 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             }
+            //en cliquant sur le bouton valider toutes les informations concernant le produit scanné seront transférées à la page suivante
             case R.id.valider:
             {
-                Intent intent = new Intent(Main2Activity.this, page4.class);
-                ArrayList<String> allerg_proposé = new ArrayList<>();
-                intent.putExtra("allerg_proposé",allerg_proposé);
-                intent.putExtra("allergenes",arrayList);
-                intent.putExtra("result",getIntent().getStringExtra("result"));
-                intent.putExtra("energie",energie);
-                intent.putExtra("sucre",sucre);
-                intent.putExtra("sodium",sodium);
-                intent.putExtra("acide",acide);
-                intent.putExtra("fibres",fibres);
-                intent.putExtra("proteins",proteins);
-                intent.putExtra("nom",nom);
-                intent.putExtra("catégorie",catégorie);
-                intent.putExtra("additifs",additifs);
-                intent.putExtra("composants",composants);
-                intent.putExtra("quantite",quantite);
-                startActivity(intent);
+                String taballerg[] = new String[20];
+                taballerg = composants.split(",");
+                String ch= "";
+                assert arrayList != null;
+                if (arrayList.size()!=0)
+                {
+                    for (int i = 0; i < taballerg.length; i++) {
+                        if ((arrayList).contains(taballerg[i])){
+                            ch += "*"+taballerg[i]+"\n";
+                        }
+
+                    }
+                }
+
+
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                if ((ch.length()!=0)) {
+                    builder.setMessage("Attention ! ce produit contient :\n \n" + ch + "\n voulez vous voir le nutri-score du produit quand méme ?");
+
+
+                    builder.setTitle("Allergènes : ");
+                    builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(Main2Activity.this, page4.class);
+                            intent.putExtra("allergenes", arrayList);
+                            intent.putExtra("result", getIntent().getStringExtra("result"));
+                            intent.putExtra("energie", energie);
+                            intent.putExtra("sucre", sucre);
+                            intent.putExtra("sodium", sodium);
+                            intent.putExtra("acide", acide);
+                            intent.putExtra("fibres", fibres);
+                            intent.putExtra("proteins", proteins);
+                            intent.putExtra("nom", nom);
+                            intent.putExtra("catégorie", catégorie);
+                            intent.putExtra("additifs", additifs);
+                            intent.putExtra("composants", composants);
+                            intent.putExtra("quantite", quantite);
+                            startActivity(intent);
+                        }
+                    });
+                    builder.setNegativeButton("non", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(Main2Activity.this, MainActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+                else {
+                    Intent intent = new Intent(Main2Activity.this, page4.class);
+                    intent.putExtra("allergenes", arrayList);
+                    intent.putExtra("result", getIntent().getStringExtra("result"));
+                    intent.putExtra("energie", energie);
+                    intent.putExtra("sucre", sucre);
+                    intent.putExtra("sodium", sodium);
+                    intent.putExtra("acide", acide);
+                    intent.putExtra("fibres", fibres);
+                    intent.putExtra("proteins", proteins);
+                    intent.putExtra("nom", nom);
+                    intent.putExtra("catégorie", catégorie);
+                    intent.putExtra("additifs", additifs);
+                    intent.putExtra("composants", composants);
+                    intent.putExtra("quantite", quantite);
+                    startActivity(intent);
+                }
+
+
                 break;
             }
+
+            //Ce bouton est réservé à ceux qui ne connaissent pas les composants qui leur causent des allergies
             case R.id.button:{
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("si vous ne connaissez pas les composants qui vous causent des allergies, essayez de choisir les aliments qui n'étaient pas bons pour vous.\n Nous en conclurons les allergènes qui peuvent être nocifs pour votre santé ");
@@ -241,6 +303,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                 builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        //toutes les informations concernant le produit scanné seront transférées à la page suivante
                         Intent intent = new Intent(Main2Activity.this, page3.class);
                         intent.putExtra("allergenes",arrayList);
                         intent.putExtra("composants",composants);
@@ -272,14 +335,20 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
         String bar;
         try {
+            //charge SQLDRoid JBDC driver
             DriverManager.registerDriver((Driver) Class.forName("org.sqldroid.SQLDroidDriver").newInstance());
+            //établir une connexion à notre base de données dans la mémoire interne
             String dbURL = "jdbc:sqldroid:" + getFilesDir() + "/" +dbName;
             Connection connection = DriverManager.getConnection(dbURL);
+            //préparer la route à partir de la base de données
             Statement stmt = connection.createStatement();
+            //extraire le code à barre
             bar=getIntent().getStringExtra("result");
+            //boucle à travers l'ensemble de résultats
             ResultSet rs = stmt.executeQuery("Select * from aliments WHERE  code ="+bar);
             while (rs.next())
             {
+                //extraire toutes les informations nutritionnelles
                 energie=rs.getString("energie");
                 sucre=rs.getString("sucres");
                 sodium=rs.getString("sodium");
@@ -301,13 +370,17 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         }}
     private void LoadDatabse()
     {
-        File checkDB = null;
+        File checkDB = null;//le fichier que nous essaierons d'écrire dans la mémoire interne
         try {
+            //  obtenir un pointeur dans notre base de données
             checkDB = new File(getFilesDir()+"/"+dbName);
             if(!checkDB.exists())
             {
+                //copier dans la base de données existante à partir du dossier assets
                 InputStream myInput = getApplicationContext().getAssets().open(dbName);
+                //le réécrire dans la mémoire interne
                 OutputStream myOutput = new FileOutputStream(getFilesDir()+"/"+dbName);
+                //transférer les bytes du fichier d'entrée vers le fichier de sortie
                 byte[] buffer = new byte[1024];
                 int length;
                 while (( length = myInput.read(buffer))>0)
@@ -324,5 +397,4 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
     }
-
 }
