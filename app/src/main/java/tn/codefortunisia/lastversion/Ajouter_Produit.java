@@ -30,7 +30,6 @@ public class Ajouter_Produit extends AppCompatActivity implements View.OnClickLi
     Double energie1 , sucre1 , acide1 , soduim1  , protein1 , fibre1 ,quantité1 , code1;
     Button ok , annuler;
 
-    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +42,7 @@ public class Ajouter_Produit extends AppCompatActivity implements View.OnClickLi
          energie = findViewById(R.id.energie);
          sucre = findViewById(R.id.sucre);
          acide = findViewById(R.id.acide);
-         soduim = findViewById(R.id.sodium);
+         soduim = findViewById(R.id.soduim);
          protein = findViewById(R.id.protein);
          fibre = findViewById(R.id.fibre);
          quantité = findViewById(R.id.quantité);
@@ -52,6 +51,17 @@ public class Ajouter_Produit extends AppCompatActivity implements View.OnClickLi
          ok = findViewById(R.id.ok);
          annuler = findViewById(R.id.annuler);
          ok.setOnClickListener(this);
+        nom1 = nom.getText().toString();
+        catégorie1 = catégorie.getText().toString();
+        composants1 = composants.getText().toString();
+        additifs1 =additifs.getText().toString();
+        energie1 =Double.parseDouble(energie.getText().toString());
+        sucre1 = Double.parseDouble(sucre.getText().toString());
+        acide1 = Double.parseDouble(acide.getText().toString());
+        soduim1 = Double.parseDouble(soduim.getText().toString());
+        protein1 = Double.parseDouble(protein.getText().toString());
+        fibre1=Double.parseDouble(fibre.getText().toString());
+        quantité1 = Double.parseDouble(quantité.getText().toString());
 
 
 
@@ -84,7 +94,7 @@ public class Ajouter_Produit extends AppCompatActivity implements View.OnClickLi
             String dbURL = "jdbc:sqldroid:" + getFilesDir() + "/" +dbName;
             Connection connection = DriverManager.getConnection(dbURL);
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("Insert into aliments(code,nom,catégorie,composants,additifs,energie,sucres,acides,sodium,proteins,fibres,quantite) values("+Double.parseDouble(getIntent().getStringExtra("result"))+"," + nom.getText().toString() +",\"hh\",\"hh\",\"hh\",44,23,56,13,45,36,456);");
+            stmt.executeUpdate("Insert into aliments(code,nom,catégorie,composants,additifs,energie,sucres,acides,sodium,proteins,fibres,quantite) values("+getIntent().getStringExtra("result")+"," + nom1+","+catégorie1 +","+ composants1 +","+ additifs1+","+energie1 +"," + sucre1 +"," + acide1 +"," + soduim1+ ","+ protein1 +" ,"+ fibre1+","+ quantité1 +");");
 
 
             Toast.makeText(getApplicationContext(), "produit enregistré",Toast.LENGTH_LONG).show();
@@ -100,19 +110,11 @@ public class Ajouter_Produit extends AppCompatActivity implements View.OnClickLi
 
                 case R.id.ok: {
 //                    code1= Double.parseDouble(getIntent().getStringExtra("code"));
-//                    nom1 = nom.getText().toString();
-//                    catégorie1 = catégorie.getText().toString();
-//                    composants1 = composants.getText().toString();
-//                    additifs1 =additifs.getText().toString();
-//                    energie1 =Double.parseDouble(energie.getText().toString());
-//                    sucre1 = Double.parseDouble(sucre.getText().toString());
-//                    acide1 = Double.parseDouble(acide.getText().toString());
-//                    soduim1 = Double.parseDouble(soduim.getText().toString());
-//                    protein1 = Double.parseDouble(protein.getText().toString());
-//                    fibre1=Double.parseDouble(fibre.getText().toString());
-//                    quantité1 = Double.parseDouble(quantité.getText().toString());
-                    LoadDatabse();
-                    TestDatabse();
+
+
+                    Toast.makeText(getApplicationContext(), nom1 + catégorie1 + composants1 + sucre1,Toast.LENGTH_LONG).show();
+//                    LoadDatabse();
+//                    TestDatabse();
                     //Intent intent = new Intent(Ajouter_Produit.this,Main2Activity.class);
                    // startActivity(intent);
                     break;

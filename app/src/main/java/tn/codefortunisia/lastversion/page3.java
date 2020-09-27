@@ -153,7 +153,7 @@ public class page3 extends AppCompatActivity implements View.OnClickListener{
             ResultSet rs = stmt.executeQuery("Select * from aliments order by nom");
             // construire le checkbox avec le nom de chaque produit
             while (rs.next()) {
-                nom = rs.getString("nom");
+                nom = rs.getString("nom") + rs.getString("composants") + rs.getString("sucres") + rs.getString("catégorie") + rs.getString("fibres")  ;
                 CheckBox ch1;
                 ch1 = new CheckBox(getApplicationContext());
                 ch1.setText(nom);
