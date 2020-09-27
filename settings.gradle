@@ -1,0 +1,2 @@
+rootProject.name='lastversion'
+include ':app'
