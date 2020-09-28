@@ -26,6 +26,7 @@ public class AjouterProduit extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ajouter_produit);
+        //faire récuperer les editText et les bouttons du page .xml
         nom = findViewById(R.id.nom);
         catégorie = findViewById(R.id.catégorie);
         composants = findViewById(R.id.composants);
@@ -51,10 +52,18 @@ public class AjouterProduit extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
 
             case R.id.ok: {
-
+                //ouvrir la base de données
                 LoadDatabse();
-                 TestDatabse();
-                break;
+                //inserer le produit
+                if(TestDatabse()){
+                    Intent intent = new Intent(AjouterProduit.this, Main2Activity.class);
+                    intent.putExtra("result",getIntent().getStringExtra("result"));
+                    startActivity(intent);
+                    break;
+                }
+                else {
+                    break;
+                }
             }
             case R.id.annuler :{
                 Intent intent = new Intent(AjouterProduit.this,MainActivity.class);
@@ -84,7 +93,7 @@ public class AjouterProduit extends AppCompatActivity implements View.OnClickLis
             e.printStackTrace();
         }
     }
-    private void TestDatabse() {
+    private boolean TestDatabse() {
 
         try {
 
@@ -92,17 +101,30 @@ public class AjouterProduit extends AppCompatActivity implements View.OnClickLis
             String dbURL = "jdbc:sqldroid:" + getFilesDir() + "/" +dbName;
             Connection connection = DriverManager.getConnection(dbURL);
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("Insert into aliments(code,nom,catégorie,additifs,composants,energie,sucres,acides,sodium,proteins,fibres,quantite) values("+getIntent().getStringExtra("result")+"," + nom.getText().toString() +","+catégorie.getText().toString()+","+additifs.getText().toString()+","+composants.getText().toString()+","+energie.getText()+","+sucre.getText()+","+acide.getText()+","+soduim.getText()+","+protein.getText()+","+fibre.getText()+","+quantité.getText()+");");
+            if ( nom.getText().toString().isEmpty() || catégorie.getText().toString().isEmpty()|| additifs.getText().toString().isEmpty() || composants.getText().toString().isEmpty() || energie.getText().toString().isEmpty() || sucre.getText().toString().isEmpty() || acide.getText().toString().isEmpty() || soduim.getText().toString().isEmpty() || protein.getText().toString().isEmpty() || fibre.getText().toString().isEmpty() || quantité.getText().toString().isEmpty()){
+                Toast.makeText(getApplicationContext(), "remplir tous les données méme avec \"\" où avec des zéros" ,Toast.LENGTH_LONG).show();
+                connection.close();
+                return false;
+
+            }
+            else {
+                //inserer le produit
+                stmt.executeUpdate("Insert into aliments(code,nom,catégorie,additifs,composants,energie,sucres,acides,sodium,proteins,fibres,quantite) values(" + getIntent().getStringExtra("result") + "," + nom.getText().toString() + "," + catégorie.getText().toString() + "," + additifs.getText().toString() + "," + composants.getText().toString() + "," + energie.getText() + "," + sucre.getText() + "," + acide.getText() + "," + soduim.getText() + "," + protein.getText() + "," + fibre.getText() + "," + quantité.getText() + ");");
 
 
-            Toast.makeText(getApplicationContext(), "produit enregistré",Toast.LENGTH_LONG).show();
-            Toast.makeText(getApplicationContext(), catégorie.getText().toString(),Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "produit enregistré", Toast.LENGTH_LONG).show();
+                connection.close();
+                return true;
 
-            connection.close();
+            }
+
+
+
         }
         catch (Exception e)
         {
             Toast.makeText(getApplicationContext(), "error :" + e.getMessage(),Toast.LENGTH_LONG).show();
+            return false;
 
         }}
 }

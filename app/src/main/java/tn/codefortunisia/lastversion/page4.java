@@ -34,6 +34,7 @@ public class page4 extends AppCompatActivity implements  View.OnClickListener {
     ConstraintLayout r;
 
     @Override
+    //faire récuperer les EditText et les remplir avec les données recu de la page précédente
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_page3);
@@ -47,16 +48,16 @@ public class page4 extends AppCompatActivity implements  View.OnClickListener {
         acides.setText("   " + getIntent().getStringExtra("acide") + " \n g/100g");
         nom = findViewById(R.id.nom);
         nom.setText(getIntent().getStringExtra("nom"));
-        ArrayList<String> allergpropose = (ArrayList<String>) getIntent().getSerializableExtra("allerg_proposé");
         r = findViewById(R.id.page3);
         additifs=findViewById(R.id.additifs);
         additifs.setOnClickListener(this);
-
+        // construire un nouveau aliment
         aliment = new NatureAliment(getIntent().getStringExtra("energie"),
                 getIntent().getStringExtra("sucre"), getIntent().getStringExtra("acide"),
                 "0.0", getIntent().getStringExtra("proteins"),
                 getIntent().getStringExtra("fibres"), getIntent().getStringExtra("quantite"),
                 getIntent().getStringExtra("composants"), getIntent().getStringExtra("catégorie"));
+        //selon la nature faire calculer le score et appartir du score affecter le background
         if (getIntent().getStringExtra("catégorie") == "jus" || getIntent().getStringExtra("catégorie") == "Boissons gazeuses") {
             if (aliment.calculScore() < -1) {
                 r.setBackgroundResource(R.drawable.bb);
@@ -80,6 +81,8 @@ public class page4 extends AppCompatActivity implements  View.OnClickListener {
                 r.setBackgroundResource(R.drawable.ee);
             }
         }
+
+        //remplir le hashmap avec les additifs
         additif = new HashMap<>();
         additif.put("E104","à eviter");
         additif.put("E133","Tolérable, vigilance pour certaines populations ");
@@ -113,60 +116,67 @@ public class page4 extends AppCompatActivity implements  View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.additifs:
-            {
+            case R.id.additifs: {
+
 
                 String tabadditifs[] = new String[20];
                 tabadditifs = getIntent().getStringExtra("additifs").split(",");
-                String ch1= "";
-                String ch2= "";
-                String ch3= "";
-                String ch4= "";
-                for (int i = 0; i < tabadditifs.length; i++) {
-                    if(additif.get(tabadditifs[i]) == "Acceptable")
-                        ch1= tabadditifs[i] + " \n" + ch1 ;
-                }
-                if (!ch1.isEmpty()) {ch1 += " : Acceptable" ; }
-                for (int i = 0; i < tabadditifs.length; i++) {
-                    if(additif.get(tabadditifs[i]) == "Tolérable, vigilance pour certaines populations")
-                        ch2= tabadditifs[i] + " \n" + ch2   ;
-                }
-                if (!ch2.isEmpty()) {ch2 += " : Tolérable, vigilance pour certaines populations" ; }
-                for (int i = 0; i < tabadditifs.length; i++) {
-                    if(additif.get(tabadditifs[i]) == "Peu recommandable")
-                        ch3= tabadditifs[i] + " \n " + ch3  ;
-                }
-                if (!ch3.isEmpty()) {ch3 += " :Peu recommandable" ; }
-                for (int i = 0; i < tabadditifs.length; i++) {
-                    if(additif.get(tabadditifs[i]) == "à eviter")
-                        ch4= tabadditifs[i] + " \n " + ch4 ;
-                }
-                if (!ch4.isEmpty()) {ch4 += " : à eviter" ; }
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+
+                //  faire correspondre les appréciations des additifs à partir du hashmap
+                    String ch1 = "";
+                    String ch2 = "";
+                    String ch3 = "";
+                    String ch4 = "";
+                    for (int i = 0; i < tabadditifs.length; i++) {
+                        if (additif.get(tabadditifs[i]) == "Acceptable")
+                            ch1 = tabadditifs[i] + " \n" + ch1;
+                    }
+                    if (!ch1.isEmpty()) {
+                        ch1 += " : Acceptable";
+                    }
+                    for (int i = 0; i < tabadditifs.length; i++) {
+                        if (additif.get(tabadditifs[i]) == "Tolérable, vigilance pour certaines populations")
+                            ch2 = tabadditifs[i] + " \n" + ch2;
+                    }
+                    if (!ch2.isEmpty()) {
+                        ch2 += " : Tolérable, vigilance pour certaines populations";
+                    }
+                    for (int i = 0; i < tabadditifs.length; i++) {
+                        if (additif.get(tabadditifs[i]) == "Peu recommandable")
+                            ch3 = tabadditifs[i] + " \n " + ch3;
+                    }
+                    if (!ch3.isEmpty()) {
+                        ch3 += " :Peu recommandable";
+                    }
+                    for (int i = 0; i < tabadditifs.length; i++) {
+                        if (additif.get(tabadditifs[i]) == "à eviter")
+                            ch4 = tabadditifs[i] + " \n " + ch4;
+                    }
+                    if (!ch4.isEmpty()) {
+                        ch4 += " : à eviter";
+                    }
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                //si le prouduit n'a pas des additifs
                 if((ch1.isEmpty())&&(ch2.isEmpty())&&(ch3.isEmpty())&&(ch4.isEmpty()))
                     builder.setMessage("Cet aliment ne contient pas d'additifs");
                 else
                 { builder.setMessage(Html.fromHtml("<font> les additifs sont :  </font> <br/> <font color= #118d51>"+ch1+"</font> <br/> <font color= #fecb27>"+ch2+" </font> <br/> <font color= #f58024>"+ch3+" </font> <br/> <font color= #ed3b23>"+ch4+" </font>"));}
-                builder.setTitle("Additifs : ");
-                builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        onStop();
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                    builder.setTitle("Additifs : ");
+                    builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            onStop();
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
             }
-
         }
-//
-//
-//
-//
-//
-//
-//    }
 
 
-    }
+
+
+
 }
