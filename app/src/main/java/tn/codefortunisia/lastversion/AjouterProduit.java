@@ -73,23 +73,32 @@ public class AjouterProduit extends AppCompatActivity implements View.OnClickLis
             }
         }
     }
-    private void LoadDatabse() {
-        File checkDB = null;
+    private void LoadDatabse()
+    {
+        File database = null;//le fichier que nous essaierons d'écrire dans la mémoire interne
         try {
-            checkDB = new File(getFilesDir() + "/" + dbName);
-            if (!checkDB.exists()) {
-                InputStream myInput = getApplicationContext().getAssets().open(dbName);
-                OutputStream myOutput = new FileOutputStream(getFilesDir() + "/" + dbName);
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = myInput.read(buffer)) > 0) {
-                    myOutput.write(buffer, 0, length);
+            //  obtenir un pointeur dans notre base de données
+            database = new File(getFilesDir()+"/"+dbName);
+            if(!database.exists())
+            {
+                //copier dans la base de données existante à partir du dossier assets
+                InputStream entree = getApplicationContext().getAssets().open(dbName);
+                //le réécrire dans la mémoire interne
+                OutputStream sortie = new FileOutputStream(getFilesDir()+"/"+dbName);
+                //transférer les bytes du fichier d'entrée vers le fichier de sortie
+                byte[] b = new byte[1024];
+                int longueur;
+                while (( longueur = entree.read(b))>0)
+                {
+                    sortie.write(b,0,longueur);
                 }
-                myOutput.flush();
-                myOutput.close();
-                myInput.close();
+                sortie.flush();
+                sortie.close();
+                entree.close();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
@@ -98,9 +107,9 @@ public class AjouterProduit extends AppCompatActivity implements View.OnClickLis
         try {
 
             DriverManager.registerDriver((Driver) Class.forName("org.sqldroid.SQLDroidDriver").newInstance());
-            String dbURL = "jdbc:sqldroid:" + getFilesDir() + "/" +dbName;
-            Connection connection = DriverManager.getConnection(dbURL);
-            Statement stmt = connection.createStatement();
+            String database = "jdbc:sqldroid:" + getFilesDir() + "/" +dbName;
+            Connection connection = DriverManager.getConnection(database);
+            Statement st = connection.createStatement();
             if ( nom.getText().toString().isEmpty() || catégorie.getText().toString().isEmpty()|| additifs.getText().toString().isEmpty() || composants.getText().toString().isEmpty() || energie.getText().toString().isEmpty() || sucre.getText().toString().isEmpty() || acide.getText().toString().isEmpty() || soduim.getText().toString().isEmpty() || protein.getText().toString().isEmpty() || fibre.getText().toString().isEmpty() || quantité.getText().toString().isEmpty()){
                 Toast.makeText(getApplicationContext(), "remplir tous les données méme avec \"\" où avec des zéros" ,Toast.LENGTH_LONG).show();
                 connection.close();
@@ -109,7 +118,7 @@ public class AjouterProduit extends AppCompatActivity implements View.OnClickLis
             }
             else {
                 //inserer le produit
-                stmt.executeUpdate("Insert into aliments(code,nom,catégorie,additifs,composants,energie,sucres,acides,sodium,proteins,fibres,quantite) values(" + getIntent().getStringExtra("result") + "," + nom.getText().toString() + "," + catégorie.getText().toString() + "," + additifs.getText().toString() + "," + composants.getText().toString() + "," + energie.getText() + "," + sucre.getText() + "," + acide.getText() + "," + soduim.getText() + "," + protein.getText() + "," + fibre.getText() + "," + quantité.getText() + ");");
+                st.executeUpdate("Insert into aliments(code,nom,catégorie,additifs,composants,energie,sucres,acides,sodium,proteins,fibres,quantite) values(" + getIntent().getStringExtra("result") + "," + nom.getText().toString() + "," + catégorie.getText().toString() + "," + additifs.getText().toString() + "," + composants.getText().toString() + "," + energie.getText() + "," + sucre.getText() + "," + acide.getText() + "," + soduim.getText() + "," + protein.getText() + "," + fibre.getText() + "," + quantité.getText() + ");");
 
 
                 Toast.makeText(getApplicationContext(), "produit enregistré", Toast.LENGTH_LONG).show();

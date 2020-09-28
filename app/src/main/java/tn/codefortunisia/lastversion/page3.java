@@ -169,13 +169,13 @@ public class page3 extends AppCompatActivity implements View.OnClickListener{
         try {
             //connexion a la base et extraire les élements
             DriverManager.registerDriver((Driver) Class.forName("org.sqldroid.SQLDroidDriver").newInstance());
-            String dbURL = "jdbc:sqldroid:" + getFilesDir() + "/" + dbName;
-            Connection connection = DriverManager.getConnection(dbURL);
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("Select * from aliments order by nom");
+            String database = "jdbc:sqldroid:" + getFilesDir() + "/" + dbName;
+            Connection connection = DriverManager.getConnection(database);
+            Statement st = connection.createStatement();
+            ResultSet result = st.executeQuery("Select * from aliments order by nom");
             // construire le checkbox avec le nom de chaque produit
-            while (rs.next()) {
-                nom = rs.getString("nom") ;
+            while (result.next()) {
+                nom = result.getString("nom") ;
                 CheckBox ch1;
                 ch1 = new CheckBox(getApplicationContext());
                 ch1.setText(nom);
@@ -200,27 +200,35 @@ public class page3 extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    private void LoadDatabse() {
-        File checkDB = null;
+    private void LoadDatabse()
+    {
+        File database = null;//le fichier que nous essaierons d'écrire dans la mémoire interne
         try {
-            checkDB = new File(getFilesDir() + "/" + dbName);
-            if (!checkDB.exists()) {
-                InputStream myInput = getApplicationContext().getAssets().open(dbName);
-                OutputStream myOutput = new FileOutputStream(getFilesDir() + "/" + dbName);
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = myInput.read(buffer)) > 0) {
-                    myOutput.write(buffer, 0, length);
+            //  obtenir un pointeur dans notre base de données
+            database = new File(getFilesDir()+"/"+dbName);
+            if(!database.exists())
+            {
+                //copier dans la base de données existante à partir du dossier assets
+                InputStream entree = getApplicationContext().getAssets().open(dbName);
+                //le réécrire dans la mémoire interne
+                OutputStream sortie = new FileOutputStream(getFilesDir()+"/"+dbName);
+                //transférer les bytes du fichier d'entrée vers le fichier de sortie
+                byte[] b = new byte[1024];
+                int longueur;
+                while (( longueur = entree.read(b))>0)
+                {
+                    sortie.write(b,0,longueur);
                 }
-                myOutput.flush();
-                myOutput.close();
-                myInput.close();
+                sortie.flush();
+                sortie.close();
+                entree.close();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
-
     private void verif() {
         String bar ;
         try {

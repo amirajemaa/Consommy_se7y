@@ -107,26 +107,26 @@ import java.sql.Statement;
     }
     private void LoadDatabse()
     {
-        File checkDB = null;//le fichier que nous essaierons d'écrire dans la mémoire interne
+        File database = null;//le fichier que nous essaierons d'écrire dans la mémoire interne
         try {
           //  obtenir un pointeur dans notre base de données
-            checkDB = new File(getFilesDir()+"/"+dbName);
-            if(!checkDB.exists())
+            database = new File(getFilesDir()+"/"+dbName);
+            if(!database.exists())
             {
                 //copier dans la base de données existante à partir du dossier assets
-                InputStream myInput = getApplicationContext().getAssets().open(dbName);
+                InputStream entree = getApplicationContext().getAssets().open(dbName);
                 //le réécrire dans la mémoire interne
-                OutputStream myOutput = new FileOutputStream(getFilesDir()+"/"+dbName);
+                OutputStream sortie = new FileOutputStream(getFilesDir()+"/"+dbName);
                 //transférer les bytes du fichier d'entrée vers le fichier de sortie
-                byte[] buffer = new byte[1024];
-                int length;
-                while (( length = myInput.read(buffer))>0)
+                byte[] b = new byte[1024];
+                int longueur;
+                while (( longueur = entree.read(b))>0)
                 {
-                    myOutput.write(buffer,0,length);
+                    sortie.write(b,0,longueur);
                 }
-                myOutput.flush();
-                myOutput.close();
-                myInput.close();
+                sortie.flush();
+                sortie.close();
+                entree.close();
             }
         }
         catch (Exception e)
@@ -141,13 +141,13 @@ import java.sql.Statement;
             //charge SQLDRoid JBDC driver
             DriverManager.registerDriver((Driver) Class.forName("org.sqldroid.SQLDroidDriver").newInstance());
             //établir une connexion à notre base de données dans la mémoire interne
-            String dbURL = "jdbc:sqldroid:" + getFilesDir() + "/" +dbName;
-            Connection connection = DriverManager.getConnection(dbURL);
+            String databaseURL = "jdbc:sqldroid:" + getFilesDir() + "/" +dbName;
+            Connection connection = DriverManager.getConnection(databaseURL);
             //préparer la route à partir de la base de données
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("Select * from aliments WHERE  code ="+bar);
+            Statement st = connection.createStatement();
+            ResultSet result = st.executeQuery("Select * from aliments WHERE  code ="+bar);
             //boucle à travers l'ensemble de résultats
-            while(rs.next())
+            while(result.next())
             {
                 return true;
             }
