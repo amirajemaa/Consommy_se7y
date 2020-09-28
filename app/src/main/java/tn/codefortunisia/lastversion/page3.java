@@ -51,7 +51,7 @@ public class page3 extends AppCompatActivity implements View.OnClickListener{
     }
     @Override
     public void onClick(View view) {
-        ArrayList<String> arrayList = (ArrayList<String>) getIntent().getSerializableExtra("allergenes");
+       // ArrayList<String> arrayList = (ArrayList<String>) getIntent().getSerializableExtra("allergenes");
         //  composants=getIntent().getStringExtra("composants");
         energie=getIntent().getStringExtra("energie");
         sucre=getIntent().getStringExtra("sucre");
@@ -70,74 +70,96 @@ public class page3 extends AppCompatActivity implements View.OnClickListener{
             verif();
             verifAllerg();
         }
+        // vérifier si le produit contient des allergénes choisis depuis la page précédente on le met dans ch
         ArrayList<String> allerg = (ArrayList<String>) getIntent().getSerializableExtra("allergenes");
         String ch= "";
         String taballerg[] = new String[20];
         taballerg = getIntent().getStringExtra("composants").split(",");
         if (allerg.size()!=0)
         {for (int i = 0; i < taballerg.length; i++) {
-            for (int j = 0; j < allerg.size(); j++) {
-                if ((taballerg[i]).equals(allerg.get(j)))
-                    ch += "*"+taballerg[i]+"\n";
+            if (allerg.contains(taballerg[i])){
+                ch += "*"+taballerg[i]+"\n";
             }
 
         }}
+        //si à partir des produits choisis on a conclut des allergénes possible on le met dans ch1
         String ch1 = "";
         if (allergproposé.size()!=0 ) {
 
             for (int i = 0; i < allergproposé.size(); i++) {
-                if(!(allerg.contains(allergproposé.get(i)))){
-                    Toast.makeText(this, "no results" + allerg.contains(allergproposé.get(i)) , Toast.LENGTH_LONG).show();
+               if(!(allerg.contains(allergproposé.get(i)))){
                     ch1 += "*" + allergproposé.get(i) + "\n";}
             }
         }
 
-
+        // faire apparaitre des alertes en considérant si ch1 et ch vide ou non
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if ((ch.length()!=0)&&(ch1.length()==0))
-            builder.setMessage("Attention ! ce produit contient :\n \n"+ch + "voulez vous voir le nutri-score du produit quand méme ?");
-        else if (ch1.length()!=0 ) {
-            if (ch.length()!=0) {
-                {
-                    builder.setMessage("Attention ! ce produit contient :\n \n" + ch + "\n " + "En outre, en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n"+ ch1+ "qui peut nuire à votre santé" + "\n voulez vous voir le nutri-score du produit quand méme ?");
-                }
-            } else if (ch.length() == 0)
-                builder.setMessage("\n" +
-                        "en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n" + ch1 + "qui peut nuire à votre santé" + "\n voulez vous voir le nutri-score du produit quand méme ?");
-        }
+        if (ch.length()!=0 || ch1.length()!=0  ) {
+            if ((ch.length() != 0) && (ch1.length() == 0))
+                builder.setMessage("Attention ! ce produit contient :\n \n" + ch + "voulez vous voir le nutri-score du produit quand méme ?");
+            else if (ch1.length() != 0) {
+                if (ch.length() != 0) {
+                    {
+                        builder.setMessage("Attention ! ce produit contient :\n \n" + ch + "\n " + "En outre, en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n" + ch1 + "qui peut nuire à votre santé" + "\n voulez vous voir le nutri-score du produit quand méme ?");
+                    }
+                } else if (ch.length() == 0)
+                    builder.setMessage("\n" +
+                            "en fonction de ce que vous avez choisi comme aliments qui ne sont pas bons pour vous, cet aliment contient \n" + ch1 + "qui peut nuire à votre santé" + "\n voulez vous voir le nutri-score du produit quand méme ?");
+            }
 
-        builder.setTitle("Allergènes : ");
-        builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                // passer les valeurs à la page suivante
-                Intent intent = new Intent(page3.this,page4.class);
-                intent.putExtra("allergenes",arrayList);
-                intent.putExtra("composants",composants);
-                intent.putExtra("energie",energie);
-                intent.putExtra("sucre",sucre);
-                intent.putExtra("sodium",sodium);
-                intent.putExtra("acide",acide);
-                intent.putExtra("fibres",fibres);
-                intent.putExtra("proteins",proteins);
-                intent.putExtra("nom",nom);
-                intent.putExtra("catégorie",catégorie);
-                intent.putExtra("additifs",additifs);
-                intent.putExtra("composants",composants);
-                intent.putExtra("quantite",quantite);
-                intent.putExtra("allerg_proposé",allergproposé);
-                startActivity(intent);
-            }
-        });
-        builder.setNegativeButton("non", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent intent = new Intent(page3.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+            builder.setTitle("Allergènes : ");
+            //si on veut voir le nutri-score du produit quand méme
+            builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // passer les valeurs à la page suivante
+                    Intent intent = new Intent(page3.this, page4.class);
+                    //intent.putExtra("allergenes", allerg);
+                    intent.putExtra("composants", composants);
+                    intent.putExtra("energie", energie);
+                    intent.putExtra("sucre", sucre);
+                    intent.putExtra("sodium", sodium);
+                    intent.putExtra("acide", acide);
+                    intent.putExtra("fibres", fibres);
+                    intent.putExtra("proteins", proteins);
+                    intent.putExtra("nom", nom);
+                    intent.putExtra("catégorie", catégorie);
+                    intent.putExtra("additifs", additifs);
+                    intent.putExtra("composants", composants);
+                    intent.putExtra("quantite", quantite);
+                    //intent.putExtra("allerg_proposé", allergproposé);
+                    startActivity(intent);
+                }
+            });
+            //si on ne veut pas connaitre le nutri-score puisque l'élement est energétique
+            builder.setNegativeButton("non", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Intent intent = new Intent(page3.this, MainActivity.class);
+                    startActivity(intent);
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+        else {
+            Intent intent = new Intent(page3.this,page4.class);
+           // intent.putExtra("allergenes",arrayList);
+            intent.putExtra("composants",composants);
+            intent.putExtra("energie",energie);
+            intent.putExtra("sucre",sucre);
+            intent.putExtra("sodium",sodium);
+            intent.putExtra("acide",acide);
+            intent.putExtra("fibres",fibres);
+            intent.putExtra("proteins",proteins);
+            intent.putExtra("nom",nom);
+            intent.putExtra("catégorie",catégorie);
+            intent.putExtra("additifs",additifs);
+            intent.putExtra("composants",composants);
+            intent.putExtra("quantite",quantite);
+            intent.putExtra("allerg_proposé",allergproposé);
+            startActivity(intent);
+        }
 
 
     }
@@ -153,7 +175,7 @@ public class page3 extends AppCompatActivity implements View.OnClickListener{
             ResultSet rs = stmt.executeQuery("Select * from aliments order by nom");
             // construire le checkbox avec le nom de chaque produit
             while (rs.next()) {
-                nom = rs.getString("nom");
+                nom = rs.getString("nom") ;
                 CheckBox ch1;
                 ch1 = new CheckBox(getApplicationContext());
                 ch1.setText(nom);
@@ -239,7 +261,7 @@ public class page3 extends AppCompatActivity implements View.OnClickListener{
     private void verifAllerg(){
         // verifier pour chaque coposant similaire s'il est allégétique
         for(int i =0 ; i< similarcomposant.size() ; i++){
-            if(similarcomposant.get(i).equals("lactose")|| similarcomposant.get(i).equals("lait en poudre") || similarcomposant.get(i).equals("lait") ||similarcomposant.get(i).equals("crème de lait") ||
+            if(similarcomposant.get(i)=="lactose"|| similarcomposant.get(i).equals("lait en poudre") || similarcomposant.get(i).equals("lait") ||similarcomposant.get(i).equals("crème de lait") ||
                     similarcomposant.get(i).equals("protéines laitières") || similarcomposant.get(i).equals("lait frais") || similarcomposant.get(i).equals("lait écrémé en poudre") || similarcomposant.get(i).equals("beurre de lait")
                     || similarcomposant.get(i).equals("lait demi-écrémé") || similarcomposant.get(i).equals("lait entier") || similarcomposant.get(i).equals("ferment lactique") || similarcomposant.get(i).equals("ferment lactique de yaourt")
                     || similarcomposant.get(i).equals("ferment lactique sélectionné") || similarcomposant.get(i).equals("graisse de beurre pur") || similarcomposant.get(i).equals("beurre") || similarcomposant.get(i).equals("oeuf")

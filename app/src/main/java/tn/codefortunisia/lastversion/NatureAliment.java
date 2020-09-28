@@ -62,7 +62,7 @@ public class NatureAliment {
         nonfruit = 0;
     }
     public NatureAliment(){}
-
+    // retourne le score de l'energie à partir de la quantité d'energie offert par le produit
     int calculEnergy() {
         if (energy <= 335) {
             return 0;
@@ -87,7 +87,7 @@ public class NatureAliment {
         } else return 10;
 
     }
-
+    // calculer le score du sucre à partir de la quantité du sucre dans le produit
     int calculSugar() {
         if (sugar <= 4.5) {
             return 0;
@@ -112,7 +112,7 @@ public class NatureAliment {
         } else return 10;
 
     }
-
+    // calculer le score de l'acide à partir de la quantité du acide dans le produit
     int calculAcide() {
         if (acide <= 1) {
             return 0;
@@ -137,7 +137,7 @@ public class NatureAliment {
         } else return 10;
 
     }
-
+    // calculer le score du soduim à partir de la quantité du soduim dans le produit
     int calculSoduim() {
         if (soduim <= 90) {
             return 0;
@@ -162,7 +162,7 @@ public class NatureAliment {
         } else return 10;
 
     }
-
+    // calculer le score du fibre à partir de la quantité du fibre dans le produit
     int calculFibre() {
         if (fibre <= 0.9) {
             return 0;
@@ -177,7 +177,7 @@ public class NatureAliment {
         } else return 5;
 
     }
-
+    // calculer le score du protein à partir de la quantité du protein dans le produit
     int calculProtein() {
         if (protein <= 1.6) {
             return 0;
@@ -192,8 +192,9 @@ public class NatureAliment {
         } else return 5;
 
     }
-
+    // calculer le score du fruit à partir de la quantité du fruit dans le produit
     int calculFruit() {
+        //faire extraire les composants et vérifier s'ils sont des fruits sec oU fraiche
         String tab_ingradiant[] = new String[100];
         tab_ingradiant = ingrédients.split(",");
         for (int i = 0; i < tab_ingradiant.length; i++) {
@@ -221,7 +222,7 @@ public class NatureAliment {
         } else return 5;
 
     }
-
+    //calcul du score final
     int calculScore() {
         int n = calculEnergy() + calculSugar() + calculAcide() + calculSoduim();
         int p = calculFruit() + calculFibre() + calculProtein();

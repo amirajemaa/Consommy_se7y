@@ -33,9 +33,11 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-
+        //ouvrir la base de données
         LoadDatabse();
+        //extraire les données
         TestDatabse();
+        //faire interconncter les bouttons du page .xml avec le fichier.java pour les manipuler
         gluten = findViewById(R.id.gluten);
         gluten.setOnClickListener(this);
         lactose = findViewById(R.id.lactose);
@@ -63,16 +65,17 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     }
     @Override
     public void onClick(View v) {
-
-        // Intent intent = new Intent(Main2Activity.this,page4.class);
+        //selon allegéne choisis le boutton change de couleur el allergéne sera enregistré dans la list des allergénes
         switch (v.getId()) {
 
             case R.id.gluten: {
+                //si le boutton n'est pas ciqué
                 if (Integer.parseInt(gluten.getTag().toString()) == 0) {
                     arrayList.add("gluten");
                     gluten.setBackgroundColor(Color.parseColor("#1AE37A7A"));
                     gluten.setTag(1);
                 }
+                //si le boutton est cliqué
                 else {
                     gluten.setBackgroundColor(Color.TRANSPARENT);
                     gluten.setTag(0);
@@ -83,6 +86,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             case R.id.lactose: {
                 if (Integer.parseInt(lactose.getTag().toString()) == 0) {
                     lactose.setBackgroundColor(Color.parseColor("#1AE37A7A"));
+                    // ajouter tout produit en relation avec le lactose
                     arrayList.add("lactose");
                     arrayList.add("lait en poudre");
                     arrayList.add("lait");
@@ -207,7 +211,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                     moutarde.setTag(1);
                 }
                 else {
-                    arrayList.remove("poisson");
+                    arrayList.remove("moutarde");
                     moutarde.setBackgroundColor(Color.TRANSPARENT);
                     moutarde.setTag(0);
                 }
@@ -215,10 +219,12 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             }
             case R.id.valider:
             {
+                //verifier si le composant est allergétique
                 String taballerg[] = new String[20];
                 taballerg = composants.split(",");
                 String ch= "";
                 assert arrayList != null;
+                //comparer les allergénes avec les composants
                 if (arrayList.size()!=0)
                 {
                     for (int i = 0; i < taballerg.length; i++) {
@@ -233,11 +239,13 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                // si le produit est allergétique
                 if ((ch.length()!=0)) {
                     builder.setMessage("Attention ! ce produit contient :\n \n" + ch + "\n voulez vous voir le nutri-score du produit quand méme ?");
 
 
                     builder.setTitle("Allergènes : ");
+                    //si on veut avoir le nutri-score du produit on passe à la 4éme page en passant les données
                     builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -258,6 +266,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                             startActivity(intent);
                         }
                     });
+                    //si on ne veut pas voir le nutri-score puisque le produit est allergétique
                     builder.setNegativeButton("non", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -290,6 +299,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                 break;
             }
 
+            // si on est pas sure des allergénes on passe à 3éme page
             case R.id.button:{
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("si vous ne connaissez pas les composants qui vous causent des allergies, essayez de choisir les aliments qui n'étaient pas bons pour vous.\n Nous en conclurons les allergènes qui peuvent être nocifs pour votre santé ");
@@ -334,6 +344,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             Statement stmt = connection.createStatement();
             bar=getIntent().getStringExtra("result");
             ResultSet rs = stmt.executeQuery("Select * from aliments WHERE  code ="+bar);
+            //extraire les données du produit
             while (rs.next())
             {
                 energie=rs.getString("energie");
